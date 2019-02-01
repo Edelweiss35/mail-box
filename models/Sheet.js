@@ -30,7 +30,7 @@ const SheetSchema = new Schema({
     Query: String
 });
 
-SheetSchema.statics.setGoogleRanking = function(id, GoogleRank){
+SheetSchema.statics.saveGoogleRanking = function(id, GoogleRank){
     return this.updateOne({_id: id}, { GoogleRank });
 }
 SheetSchema.statics.getSheets = function(){

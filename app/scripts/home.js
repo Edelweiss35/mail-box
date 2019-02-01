@@ -14,29 +14,27 @@ fileToRead.addEventListener("change", function(event) {
 
     var formData = new FormData();
     formData.append("filetoupload", files[0]);
+
     var request = new XMLHttpRequest();
     request.open("POST", "/fileupload");
-    request.timeout = 120000;
-    request.onload = function () {
-      // Request finished. Do processing here.
-      console.log('onLoad');
-    };
-    
-    request.ontimeout = function (e) {
-      // XMLHttpRequest timed out. Do something here.
-      console.log('Timeout');
-    };
-
     request.onreadystatechange = function () {
       if(request.readyState === 4 && request.status === 200) {
-        if(request.responseText == 'Finished'){
-          $("#preloader").attr("hidden",true);
-          window.location.href='/table';
+        if(request.responseText == 'Saved'){
+          getRakingState();
         }
       }
     };
-
     request.send(formData);
   }
-
 }, false);
+
+function getRakingState(){
+  $.get('/checkRankingState', function(result){
+    if(!result.isRanking)
+      setTimeout(function(){ getRakingState(); }, 1000);
+    else{
+      $("#preloader").attr("hidden",true);
+      window.location.href='/table';
+    }
+  })
+}
