@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Material Design Bootstrap</title>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
+  <!-- Bootstrap core CSS -->
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <!-- Material Design Bootstrap -->
+  <link href="css/mdb.min.css" rel="stylesheet">
+  <!-- Your custom styles (optional) -->
+  <link href="css/home.css" rel="stylesheet">
+
+</head>
+
+
+<body>
+  <div id="preloader" class="flex-center" hidden >
+    <div class="spinner-grow" style="width: 3rem; height: 3rem;" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+  <header>
+      <!--Main Navigation-->
+    <nav class="navbar fixed-top navbar-expand-lg navbar-dark scrolling-navbar">
+      <!-- <a class="navbar-brand" href="#"><strong>Navbar</strong></a> -->
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav m-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/table">Table</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  
+    <div class="view intro-2">
+      <div class="full-bg-img">
+        <div class="mask rgba-black-light flex-center">
+          <div class="container text-center white-text">
+            <div class="white-text text-center wow fadeInUp">
+              <h1 class="text-light">LEAD GRINDER</h1>
+              <h5 class="text-light mt-3">Upload CSV</h5>
+              <button type="button" class="btn btn-outline-light btn-lg mt-5 waves-effect" onclick="chooseFile()">
+                Select File
+              </button>
+              <form method="post" enctype="multipart/form-data" class="sr-only">
+                <input type="file" id="file" name="filetoupload" accept=".csv">
+              </form>
+              <div class="mt-1">
+                <a href>Download an Example File</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!--Main Navigation-->
+  </header>
+  <!-- /Start your project here-->
+
+  <!-- SCRIPTS -->
+  <!-- JQuery -->
+  <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
+  <!-- Bootstrap tooltips -->
+  <script type="text/javascript" src="js/popper.min.js"></script>
+  <!-- Bootstrap core JavaScript -->
+  <script type="text/javascript" src="js/bootstrap.min.js"></script>
+  <!-- MDB core JavaScript -->
+  <script type="text/javascript" src="js/mdb.js"></script>
+
+  <!-- /Start your project here-->
+  <script type="text/javascript" src="scripts/home.js"></script>
+</body>
+
+</html>
