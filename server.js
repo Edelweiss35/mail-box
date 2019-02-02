@@ -8,6 +8,8 @@ const puppeteer = require('puppeteer');
 var app = express();
 app.set('view engine', 'ejs');
 
+const { createWebsocket } = require('./websocket');
+
 var { mongoDB } = require('./config');
 var { isRanking } = require('./constant');
 var Sheet = require('./models/Sheet');
@@ -32,9 +34,10 @@ app.post('/fileupload', async function (req, res, next) {
   await Sheet.removeAll();
   // parse csv and store on db
   await parseCSV_SaveDB(req);
-  //get google ranking
+  // get google ranking
   getGoogleRanking();
-  
+  // get screenshots
+  getScreenshots();
   res.end('Saved');
 });
 
@@ -55,8 +58,9 @@ app.get('/table', function(req, res){
   res.render('table');
 });
 
-app.listen(port, async function(){
+var server = app.listen(port, async function(){
   console.log("Express server listening on port " + app.get('port'));
+  createWebsocket(server);
 
   for( var i in exDomains ){
     var domain = exDomains[i];
@@ -64,8 +68,8 @@ app.listen(port, async function(){
     if(!isExist)
       await ExDomain.saveExcludedDomain(domain);
   }
+  getScreenshots();
 });
-
 getGoogleRanking= async ()=> {
   console.log('getGoogleRanking');
   isRanking = false;
@@ -181,4 +185,27 @@ parseCSV_SaveDB = (req) => {
       });  
     });
   });
+}
+
+getScreenshots = async () => {
+  var result = await Sheet.getSheets();
+
+  const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
+  const page = await browser.newPage();
+
+  var j = 0;
+  for( var i in result ){
+    j++;
+    if(j > 10)
+      break;
+
+    var ele = result[i];
+    var id = ele._id;
+    var website = ele.Website;
+    console.log(id, website);
+    // await page.goto(website);
+    // await page.screenshot({path: id + '.jpg'});
+  }
+
+  await browser.close();
 }
