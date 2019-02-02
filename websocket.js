@@ -1,5 +1,7 @@
+var WebSocketServer = require('ws').Server
 
 exports.createWebsocket =(server) => {
+    console.log('create websocket');
     var wss = new WebSocketServer({server});
     wss.on('connection', function(ws) {
         var id = setInterval(function() {
