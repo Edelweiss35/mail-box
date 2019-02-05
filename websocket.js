@@ -9,8 +9,9 @@ module.exports = (function(){
 
         wss.on('connection', ws => {
             websocket = ws;
-            console.log('Weboscket connected!');
+            console.log('Websocket connected!');
             ws.on('close', function() {
+                websocket = null;
             });
             ws.on('message', message => {
                 console.log(`Received message => ${message}`);
