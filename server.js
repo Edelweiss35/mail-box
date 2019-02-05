@@ -4,6 +4,8 @@ var fs = require('fs');
 var formidable = require('formidable');
 const csv = require('csv-parser');
 const puppeteer = require('puppeteer');
+const devices = require('puppeteer/DeviceDescriptors');
+const iPhone = devices['iPhone 6'];
 
 var app = express();
 app.set('view engine', 'ejs');
@@ -255,7 +257,7 @@ getSS = async(page) => {
     return;
   }
   await page.screenshot({path: './app/img/SS/'+desktopFileName, type: 'jpeg'});
-  await page.setViewport(mobileViewPort);
+  await page.emulate(iPhone);
   await page.screenshot({path: './app/img/SS/'+mobileFileName, type: 'jpeg'});
 
   await Sheet.updateData(_id, 'SSCaptured', true);
