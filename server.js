@@ -35,7 +35,7 @@ app.post('/fileupload', async function (req, res, next) {
   // get google ranking
   // getGoogleRanking();
   // get screenshots
-  // getScreenshots();
+  getScreenshots();
   console.log('Saved all data');
   res.end('Saved');
 });
@@ -66,7 +66,7 @@ var server = app.listen(port, async function(){
     if(!isExist)
       await ExDomain.saveExcludedDomain(domain);
   }
-  getScreenshots();
+  // getScreenshots();
   // getGoogleRanking();
 });
 getGoogleRanking= async ()=> {
@@ -223,7 +223,7 @@ parseCSV_SaveDB = (req) => {
 
 getScreenshots = async () => {
   var result = await Sheet.getSSEmptySheets();
-  
+  console.log(result.length);
   const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
   const page = await browser.newPage();
 
@@ -257,8 +257,8 @@ getScreenshots = async () => {
     await page.screenshot({path: './app/img/SS/'+mobileFileName, type: 'jpeg'});
 
     await Sheet.updateData(_id, 'SSCaptured', true);
-    ws.send(desktopFileName, 
-                function() { /* ignore errors */ });
+    console.log(desktopFileName, 'created');
+    ws.send(desktopFileName, function() { /* ignore errors */ });
   }
 
   await browser.close();

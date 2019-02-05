@@ -99,6 +99,7 @@ $(document).ready(function () {
 
 
   function updateThumbnail(filename) {
+    console.log(filename, 'from websocket');
     table.rows( function ( idx, data, node ) {
       if(data[9] === filename){
         table.row(idx).data(data).invalidate();
