@@ -20,21 +20,10 @@ fileToRead.addEventListener("change", function(event) {
     request.onreadystatechange = function () {
       if(request.readyState === 4 && request.status === 200) {
         if(request.responseText == 'Saved'){
-          getRakingState();
+          
         }
       }
     };
     request.send(formData);
   }
 }, false);
-
-function getRakingState(){
-  $.get('/checkRankingState', function(result){
-    if(!result.isRanking)
-      setTimeout(function(){ getRakingState(); }, 1000);
-    else{
-      $("#preloader").attr("hidden",true);
-      window.location.href='/table';
-    }
-  })
-}

@@ -9,9 +9,7 @@ var app = express();
 app.set('view engine', 'ejs');
 
 const { createWebsocket } = require('./websocket');
-
 var { mongoDB } = require('./config');
-var { isRanking } = require('./constant');
 var Sheet = require('./models/Sheet');
 var ExDomain = require('./models/ExDomain');
 
@@ -35,14 +33,11 @@ app.post('/fileupload', async function (req, res, next) {
   // parse csv and store on db
   await parseCSV_SaveDB(req);
   // get google ranking
-  getGoogleRanking();
+  // getGoogleRanking();
   // get screenshots
-  getScreenshots();
+  // getScreenshots();
+  console.log('Saved all data');
   res.end('Saved');
-});
-
-app.get('/checkRankingState', function(req, res){
-  res.json({isRanking});
 });
 
 app.get('/getCSVData', async function (req, res) {
@@ -58,10 +53,13 @@ app.get('/table', function(req, res){
   res.render('table');
 });
 
+var ws = undefined;
+
 var server = app.listen(port, async function(){
   console.log("Express server listening on port " + app.get('port'));
-  createWebsocket(server);
-
+ 
+  ws = await createWebsocket(server);
+  
   for( var i in exDomains ){
     var domain = exDomains[i];
     var isExist = await ExDomain.isExist(domain);
@@ -69,95 +67,131 @@ var server = app.listen(port, async function(){
       await ExDomain.saveExcludedDomain(domain);
   }
   getScreenshots();
+  // getGoogleRanking();
 });
 getGoogleRanking= async ()=> {
   console.log('getGoogleRanking');
-  isRanking = false;
 
-  var queryResult = await getGoogleQueryResult('Plumbers Los Angeles');
-  queryResult = removeExDomainsFromQueryResult(queryResult);
-  await getRankFromQueryResult(queryResult);
+  var result = await Sheet.getUnRankedSheets();
+  var j = 0;
+  for( var i in result ){
+    j++;
+    if(j > 100)
+      break;
+    const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
+    const page = await browser.newPage();
+    page.once('load', () => console.log('Page loaded!'));
+    await page.goto('https://google.com', { waitUntil: 'networkidle0' });
 
-  isRanking = true;
+    var ele = result[i];
+    var id = ele._id;
+    var website = ele.Website;
+    var kw = ele.Keyword;
+    var city = ele.City;
+    var query = city + ' ' + kw;
+    console.log(i, query);
+    var queryResult = await getGoogleQueryResult(page, query);
+    var newResult = removeExDomainsFromQueryResult(queryResult);
+    var queryRank = await getRankFromQueryResult(newResult, website);
+    console.log(i, query, queryRank);
+
+    await Sheet.updateData(id, 'Query', query);
+    await Sheet.updateData(id, 'GoogleRank', queryRank);
+
+    await browser.close();
+  }
+  
+  
   console.log('getGoogleRanking finished');
 }
 
-getGoogleQueryResult= async (query)=>{
-  const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
-  const page = await browser.newPage();
-  await page.goto('https://google.com', { waitUntil: 'networkidle0' })
-  const title = await page.title()
-  console.log(title);
+getGoogleQueryResult= async (page, query)=>{
+  
+  const navigationPromise = page.waitForNavigation({ waitUntil: 'domcontentloaded'});
+  var queryResult = [];
+  
+  await page.evaluate(function() { document.querySelector('input[name=q]').value = ''; });
+  await page.type('input[name=q]', query, { delay: 100 });
+  await page.keyboard.press('Enter');
+  await navigationPromise;
+  // await page.waitFor(5000);
 
-  var searchResultDomains = [];
-  if(title == "Google"){
-    await page.type('input[name=q]', query, { delay: 100 })
-    await page.click('input[type="submit"]')
-    await page.waitFor(15000);
-    const anchorHandle = await page.$x('//div[@class="r"]/*[1]');
-
+  try{
+    const anchorHandle = await page.$x('//div[@class="r"]/a[1]');
+    console.log(1, 'length', anchorHandle.length);
     for (const anchor of anchorHandle) {
       let text = await page.evaluate(ele => ele.href, anchor);
-      searchResultDomains.push(text);
+      queryResult.push(text);
     }
-
-    for( var i = 2; i < 7; i++){
-      await page.click('a[aria-label="Page '+i+'"]');
-      await page.waitFor(15000);
-
-      const anchorHandle = await page.$x('//div[@class="r"]/*[1]');
-      for (const anchor of anchorHandle) {
-        let text = await page.evaluate(ele => ele.href, anchor);
-        searchResultDomains.push(text);
-      }
-    }
+  }catch(error){
+    console.log(error)
   }
 
-  await browser.close();
-  return searchResultDomains;
-}
+  for( var k = 3; k < 7; k++){
+    console.log('k = ', k);
+    try{
+      await navigationPromise
+      await page.click('#nav > tbody > tr > td:nth-child('+k+') > .fl')
 
-getRankFromQueryResult = async (queryResult) => {
-  console.log('getRankFromQueryResult');
-  var sheetData = await Sheet.getSheets();
-  for( var j in sheetData ){
-    var ele = sheetData[j];
-    var websiteUrl = ele.Website.toLowerCase();
-    var id = ele._id;
-    var gotRank = false;
-    for( var i = 0; i < 50; i++){
-      var url = queryResult[i].toLowerCase();
-      gotRank = url.includes(websiteUrl);
-      if(gotRank){
-        saveGoogleRanking(id, '' + (i + 1));
-        console.log(j, i+1);
-        break;
-      }
+      await navigationPromise
+      await page.waitFor(4000);
+      
+    } catch(error){
+      console.log(error);
     }
-    if(!gotRank)
-      saveGoogleRanking(id, '50+')
+
+    const anchorHandle1 = await page.$x('//div[@class="r"]/a[1]');
+    
+    console.log(k, 'length', anchorHandle1.length);
+    for (const anchor1 of anchorHandle1) {
+      let text = await page.evaluate(ele => ele.href, anchor1);
+      queryResult.push(text);
+    }
   }
-  console.log('getRankFromQueryResult finished');
+    
+  await page.close();
+  console.log(queryResult.length);
+  return queryResult;
 }
 
-saveGoogleRanking = async (id, ranking) => {
-  await Sheet.saveGoogleRanking(id, ranking);
+getAvailableLinks = async (page, resolve)=>{
+  const anchorHandle = await page.$x('//div[@class="r"]/a[1]');
+  console.log('length',anchorHandle.length);
+  if(anchorHandle.length > 0){
+    resolve(anchorHandle);
+  }else
+    setTimeout(function(){ getAvailableLinks(page, resolve)}, 100);
 }
-
-removeExDomainsFromQueryResult =(result) => {
-  for( var i = 0; i < result.length; i++){
-    var url = result[i].toLowerCase();
+removeExDomainsFromQueryResult =(queryResult) => {
+  var newResult = [];
+  for( var i = 0; i < queryResult.length; i++){
+    var url = queryResult[i].toLowerCase();
+    var isExDomain = false;
     for( var j in exDomains){
       var exDomain = exDomains[j].toLowerCase();
-      var isExDomain = url.includes(exDomain);
-      if(isExDomain){
-        result.splice(i, 1);
-        i = i-1
+      isExDomain = url.includes(exDomain);
+      if(isExDomain)
         break;
-      }
+    }
+    if(!isExDomain){
+      newResult.push(queryResult[i]);
     }
   }
-  return result;
+  return newResult;
+}
+
+getRankFromQueryResult = async (queryResult, website) => {
+  var websiteUrl = website.toLowerCase();
+  var gotRank = false;
+  for( var i = 0; i < queryResult.length; i++){
+    var url = queryResult[i].toLowerCase();
+    gotRank = url.includes(websiteUrl);
+    if(gotRank){
+      return i+1;
+    }
+  }
+  if(!gotRank)
+    return '50+';
 }
 
 parseCSV_SaveDB = (req) => {
@@ -188,7 +222,7 @@ parseCSV_SaveDB = (req) => {
 }
 
 getScreenshots = async () => {
-  var result = await Sheet.getSheets();
+  var result = await Sheet.getSSEmptySheets();
 
   const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
   const page = await browser.newPage();
@@ -196,15 +230,35 @@ getScreenshots = async () => {
   var j = 0;
   for( var i in result ){
     j++;
-    if(j > 10)
+    if(j > 100)
       break;
 
     var ele = result[i];
-    var id = ele._id;
+    var _id = ele._id;
     var website = ele.Website;
-    console.log(id, website);
-    // await page.goto(website);
-    // await page.screenshot({path: id + '.jpg'});
+    var fileName = website.slice(website.indexOf('//') + 2);
+    fileName = fileName.replace('www.', '');
+    fileName = fileName.replace(/\//g, '>');
+    console.log(j, website, fileName);
+    var mobileFileName = fileName + '-mobile.jpg';
+    var desktopFileName = fileName + '-desktop.jpg';
+    const desktopViewPort={width:1920, height:1080};
+    const mobileViewPort={width:375, height:667};
+
+    await page.setViewport(desktopViewPort);
+    try {
+      await page.goto(website);
+    } catch (err) {
+      console.log(err.message);
+      continue;
+    }
+    await page.screenshot({path: './app/img/SS/'+desktopFileName, type: 'jpeg'});
+    await page.setViewport(mobileViewPort);
+    await page.screenshot({path: './app/img/SS/'+mobileFileName, type: 'jpeg'});
+
+    await Sheet.updateData(_id, 'SSCaptured', true);
+    ws.send(desktopFileName, 
+                function() { /* ignore errors */ });
   }
 
   await browser.close();

@@ -6,6 +6,7 @@ $(document).ready(function () {
   // Setup - add a text input to each footer cell
   $('#dtBasicExample tfoot th').each( function () {
     var title = $(this).text();
+    // if( title != 'Thumbnail')
     $(this).html( '<form class="form-inline md-form form-sm mt-0"><i class="fas fa-search" aria-hidden="true"></i><input class="form-control form-control-sm ml-3 w-75" type="text" placeholder="'+title+'" aria-label="Search"></form>');
     
   } );
@@ -18,6 +19,11 @@ $(document).ready(function () {
       "targets": 5,
       "render": function ( data, type, full, meta ) {
         return '<a target="_blank" rel="noopener noreferrer" href="'+data+'">'+data+'</a>';
+      }
+    },{
+      "targets": 9,
+      "render": function ( data, type, full, meta ) {
+        return '<a target="_blank" href="img/SS/'+data+'"><img src="img/SS/'+data+'" alt="'+data+'" style="width:150px"></a>';
       }
     } ]
   });
@@ -43,6 +49,12 @@ $(document).ready(function () {
     for( var i in result ){
         var row = [];
         var ele = result[i];
+        var website = ele.Website;
+        var fileName = website.slice(website.indexOf('//') + 2);
+        fileName = fileName.replace('www.', '');
+        fileName = fileName.replace(/\//g, '>');
+        var desktopFileName = fileName + '-desktop.jpg';
+
         row.push(ele.Company);
         row.push(ele.City);
         row.push(ele.Region);
@@ -52,6 +64,7 @@ $(document).ready(function () {
         row.push(ele.GoogleRank);
         row.push(ele.Query);
         row.push(ele.Email);
+        row.push(desktopFileName);
         dataSet.push(row);
     }
     table.clear();
@@ -84,6 +97,19 @@ $(document).ready(function () {
     }
   } );
 
+
+  function updateStats(memuse) {
+    document.getElementById('rss').innerHTML = memuse.rss;
+    document.getElementById('heapTotal').innerHTML = memuse.heapTotal;
+    document.getElementById('heapUsed').innerHTML = memuse.heapUsed;
+  }
+  var host = window.document.location.host.replace(/:.*/, '');
+  console.log(window.document.location.host);
+  var ws = new WebSocket('wss://' + host + '/');
+  ws.onmessage = function (event) {
+    updateStats(JSON.parse(event.data));
+  };
+  
 });
 
 
