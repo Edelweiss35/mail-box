@@ -239,7 +239,7 @@ getScreenshots = async () => {
     var fileName = website.slice(website.indexOf('//') + 2);
     fileName = fileName.replace('www.', '');
     fileName = fileName.replace(/\//g, '>');
-    console.log(j, website, fileName);
+    console.log(i, website, fileName);
     var mobileFileName = fileName + '-mobile.jpg';
     var desktopFileName = fileName + '-desktop.jpg';
     const desktopViewPort={width:1920, height:1080};
