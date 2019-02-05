@@ -66,7 +66,7 @@ var server = app.listen(port, async function(){
     if(!isExist)
       await ExDomain.saveExcludedDomain(domain);
   }
-  getScreenshots();
+  startSSEngine();
   // getGoogleRanking();
 });
 getGoogleRanking= async ()=> {
@@ -221,43 +221,46 @@ parseCSV_SaveDB = (req) => {
   });
 }
 
-getScreenshots = async () => {
-  setInterval(function(){console.log('getScreenshots')}, 1000);
+startSSEngine = async () => {
   const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
   const page = await browser.newPage();
 
-  while(true){
-    var ele = await Sheet.getSSEmptySheet();
-    if(ele == null)
-      break;
+  getSS(page);
+}
 
-    var _id = ele._id;
-    var website = ele.Website;
-    var fileName = website.slice(website.indexOf('//') + 2);
-    fileName = fileName.replace('www.', '');
-    fileName = fileName.replace(/\//g, '>');
-    
-    var mobileFileName = fileName + '-mobile.jpg';
-    var desktopFileName = fileName + '-desktop.jpg';
-    const desktopViewPort={width:1920, height:1080};
-    const mobileViewPort={width:375, height:667};
-
-    await page.setViewport(desktopViewPort);
-    try {
-      await page.goto(website);
-    } catch (err) {
-      console.log(err.message);
-      continue;
-    }
-    await page.screenshot({path: './app/img/SS/'+desktopFileName, type: 'jpeg'});
-    await page.setViewport(mobileViewPort);
-    await page.screenshot({path: './app/img/SS/'+mobileFileName, type: 'jpeg'});
-
-    await Sheet.updateData(_id, 'SSCaptured', true);
-    console.log(desktopFileName, 'captured');
-
-    socket.sendMsg(desktopFileName);
+getSS = async(page) => {
+  console.log('getSS Start');
+  var ele = await Sheet.getSSEmptySheet();
+  if(ele == null){
+    setTimeout(getSS(page), 1000);
+    return;
   }
+  var _id = ele._id;
+  var website = ele.Website;
+  var fileName = website.slice(website.indexOf('//') + 2);
+  fileName = fileName.replace('www.', '');
+  fileName = fileName.replace(/\//g, '>');
+  
+  var mobileFileName = fileName + '-mobile.jpg';
+  var desktopFileName = fileName + '-desktop.jpg';
+  const desktopViewPort={width:1920, height:1080};
+  const mobileViewPort={width:375, height:667};
 
-  await browser.close();
+  await page.setViewport(desktopViewPort);
+  try {
+    await page.goto(website);
+  } catch (err) {
+    console.log(err.message);
+    continue;
+  }
+  await page.screenshot({path: './app/img/SS/'+desktopFileName, type: 'jpeg'});
+  await page.setViewport(mobileViewPort);
+  await page.screenshot({path: './app/img/SS/'+mobileFileName, type: 'jpeg'});
+
+  await Sheet.updateData(_id, 'SSCaptured', true);
+  console.log(desktopFileName, 'captured');
+
+  socket.sendMsg(desktopFileName);
+
+  setTimeout(getSS(page), 1000);
 }
