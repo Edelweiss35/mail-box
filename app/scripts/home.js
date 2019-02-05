@@ -20,7 +20,7 @@ fileToRead.addEventListener("change", function(event) {
     request.onreadystatechange = function () {
       if(request.readyState === 4 && request.status === 200) {
         if(request.responseText == 'Saved'){
-          
+          $("#preloader").attr('hidden', true);
         }
       }
     };
