@@ -98,18 +98,24 @@ $(document).ready(function () {
   } );
 
 
-  function updateStats(memuse) {
-    document.getElementById('rss').innerHTML = memuse.rss;
-    document.getElementById('heapTotal').innerHTML = memuse.heapTotal;
-    document.getElementById('heapUsed').innerHTML = memuse.heapUsed;
+  function updateThumbnail(filename) {
+    table.rows( function ( idx, data, node ) {
+      if(data[9] === filename){
+        table.row(idx).data(data).invalidate();
+      }
+      return false;
+    });
   }
   var host = window.document.location.host.replace(/:.*/, '');
   console.log(window.document.location.host);
   var ws = new WebSocket('wss://' + host + '/');
   ws.onmessage = function (event) {
-    updateStats(JSON.parse(event.data));
+    updateThumbnail(event.data);
   };
-  
+  // $('#update').on('click', function(){
+  //   console.log('update');
+  //   updateThumbnail('dryorsteam.com>-desktop.jpg');
+  // });
 });
 
 

@@ -168,10 +168,6 @@
     </div>
     <!-- Full Height Modal Right -->
 
-    <div>
-      RSS: <div id='desktop'></div>
-    </div>
-
   </main>
   <!--Main Layout-->
 
@@ -192,18 +188,6 @@
   <!-- /Start your project here-->
   <script type="text/javascript" src="scripts/table.js"></script>
 
-  <script>
-    function updateStats(filename) {
-      document.getElementById('desktop').innerHTML = filename;
-    }
-    var host = window.document.location.host.replace(/:.*/, '');
-    console.log(window.document.location.host);
-    var ws = new WebSocket('wss://' + host + '/');
-    ws.onmessage = function (event) {
-      console.log(event);
-      updateStats(event.data);
-    };
-  </script>
 </body>
 
 </html>

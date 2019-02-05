@@ -223,15 +223,15 @@ parseCSV_SaveDB = (req) => {
 
 getScreenshots = async () => {
   var result = await Sheet.getSSEmptySheets();
-
+  
   const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
   const page = await browser.newPage();
 
-  var j = 0;
+  // var j = 0;
   for( var i in result ){
-    j++;
-    if(j > 100)
-      break;
+    // j++;
+    // if(j > 5)
+    //   break;
 
     var ele = result[i];
     var _id = ele._id;
