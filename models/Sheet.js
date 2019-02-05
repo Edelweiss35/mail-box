@@ -30,8 +30,8 @@ const SheetSchema = new Schema({
     Query: String,
     SSCaptured: Boolean
 });
-SheetSchema.statics.getSSEmptySheets = function(){
-    return this.find({SSCaptured: false});
+SheetSchema.statics.getSSEmptySheet = function(){
+    return this.findOne({SSCaptured: false});
 }
 SheetSchema.statics.getUnRankedSheets = function(){
     return this.find({GoogleRank: '0'});

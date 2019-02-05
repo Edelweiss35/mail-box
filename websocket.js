@@ -1,25 +1,29 @@
+
 var WebSocketServer = require('ws').Server
+var wss = null;
+var websocket = null;
 
-exports.createWebsocket =(server) => {
+module.exports = (function(){
+    const createServer = (server)=>{
+        wss = new WebSocketServer({server});
 
-    var wss = new WebSocketServer({server});
-    
-    return new Promise((resolve)=>{
-        wss.on('connection', function(ws) {
-            console.log('websocket connected');
-            resolve(ws);
+        wss.on('connection', ws => {
+            websocket = ws;
+            console.log('Weboscket connected!');
+            ws.on('close', function() {
+            });
+            ws.on('message', message => {
+                console.log(`Received message => ${message}`);
+            });
         });
-    });
-    
-    // wss.on('connection', function(ws) {
-    //     var id = setInterval(function() {
-    //         ws.send(JSON.stringify(process.memoryUsage()), 
-    //             function() { /* ignore errors */ });
-    //         }, 100);
+    }
 
-    //     ws.on('close', function() {
-    //         clearInterval(id);
-    //     });
-    // });
-    
-}
+    const sendMsg = (msg) => {
+        if(websocket != null)
+            websocket.send(msg);
+        else
+            console.log('socket not connected');
+    }
+
+    return { createServer, sendMsg };
+})();

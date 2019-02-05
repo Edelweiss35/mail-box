@@ -99,7 +99,7 @@ $(document).ready(function () {
 
 
   function updateThumbnail(filename) {
-    console.log(filename, 'from websocket');
+    console.log(filename, 'from websocketserver');
     table.rows( function ( idx, data, node ) {
       if(data[9] === filename){
         table.row(idx).data(data).invalidate();
@@ -108,15 +108,10 @@ $(document).ready(function () {
     });
   }
   var host = window.document.location.host.replace(/:.*/, '');
-  console.log(window.document.location.host);
   var ws = new WebSocket('wss://' + host + '/');
   ws.onmessage = function (event) {
     updateThumbnail(event.data);
   };
-  // $('#update').on('click', function(){
-  //   console.log('update');
-  //   updateThumbnail('dryorsteam.com>-desktop.jpg');
-  // });
 });
 
 

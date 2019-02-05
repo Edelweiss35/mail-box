@@ -8,7 +8,7 @@ const puppeteer = require('puppeteer');
 var app = express();
 app.set('view engine', 'ejs');
 
-const { createWebsocket } = require('./websocket');
+const socket = require('./websocket');
 var { mongoDB } = require('./config');
 var Sheet = require('./models/Sheet');
 var ExDomain = require('./models/ExDomain');
@@ -35,7 +35,7 @@ app.post('/fileupload', async function (req, res, next) {
   // get google ranking
   // getGoogleRanking();
   // get screenshots
-  getScreenshots();
+  // getScreenshots();
   console.log('Saved all data');
   res.end('Saved');
 });
@@ -57,16 +57,16 @@ var ws = undefined;
 
 var server = app.listen(port, async function(){
   console.log("Express server listening on port " + app.get('port'));
- 
-  ws = await createWebsocket(server);
-  
+
+  socket.createServer(server);
+
   for( var i in exDomains ){
     var domain = exDomains[i];
     var isExist = await ExDomain.isExist(domain);
     if(!isExist)
       await ExDomain.saveExcludedDomain(domain);
   }
-  // getScreenshots();
+  getScreenshots();
   // getGoogleRanking();
 });
 getGoogleRanking= async ()=> {
@@ -222,24 +222,20 @@ parseCSV_SaveDB = (req) => {
 }
 
 getScreenshots = async () => {
-  var result = await Sheet.getSSEmptySheets();
-  console.log(result.length);
   const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
   const page = await browser.newPage();
 
-  // var j = 0;
-  for( var i in result ){
-    // j++;
-    // if(j > 5)
-    //   break;
+  while(true){
+    var ele = await Sheet.getSSEmptySheet();
+    if(ele == null)
+      break;
 
-    var ele = result[i];
     var _id = ele._id;
     var website = ele.Website;
     var fileName = website.slice(website.indexOf('//') + 2);
     fileName = fileName.replace('www.', '');
     fileName = fileName.replace(/\//g, '>');
-    console.log(i, website, fileName);
+    
     var mobileFileName = fileName + '-mobile.jpg';
     var desktopFileName = fileName + '-desktop.jpg';
     const desktopViewPort={width:1920, height:1080};
@@ -257,8 +253,9 @@ getScreenshots = async () => {
     await page.screenshot({path: './app/img/SS/'+mobileFileName, type: 'jpeg'});
 
     await Sheet.updateData(_id, 'SSCaptured', true);
-    console.log(desktopFileName, 'created');
-    ws.send(desktopFileName, function() { /* ignore errors */ });
+    console.log(desktopFileName, 'captured');
+
+    socket.sendMsg(desktopFileName);
   }
 
   await browser.close();
