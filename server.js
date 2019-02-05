@@ -232,7 +232,7 @@ getSS = async(page) => {
   console.log('getSS Start');
   var ele = await Sheet.getSSEmptySheet();
   if(ele == null){
-    setTimeout(getSS(page), 1000);
+    setTimeout(function(){getSS(page)}, 1000);
     return;
   }
   var _id = ele._id;
@@ -251,7 +251,8 @@ getSS = async(page) => {
     await page.goto(website);
   } catch (err) {
     console.log(err.message);
-    continue;
+    setTimeout(function(){getSS(page)}, 1000);
+    return;
   }
   await page.screenshot({path: './app/img/SS/'+desktopFileName, type: 'jpeg'});
   await page.setViewport(mobileViewPort);
@@ -262,5 +263,5 @@ getSS = async(page) => {
 
   socket.sendMsg(desktopFileName);
 
-  setTimeout(getSS(page), 1000);
+  setTimeout(function(){getSS(page)}, 1000);
 }
