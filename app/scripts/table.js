@@ -3,7 +3,7 @@ $(document).ready(function () {
   // Hide Spinner
   $('#spinner').removeClass('hide-opacity');
 
-  // Setup - add a text input to each footer cell
+  // Setup - add a text input to each header cell
   $('#dtBasicExample thead tr:eq(0) th').each( function (i) {
     
     if(i == 0){
@@ -23,16 +23,12 @@ $(document).ready(function () {
     });
   });
 
-  $('input#checkAll').on('change', function(){
-    var checked = $(this).prop('checked');
-    $('input[type=checkbox]').prop('checked', checked);
-  });
-
   // Init Datatable
   var table = $('#dtBasicExample').DataTable({
     "lengthMenu": [ 25, 50, 100 ],
     select: true,
     'createdRow': function(row, data, dataIndex){
+      $('td:eq(0)', row).css('min-width', '70px');
       $('td:eq(2)', row).css('min-width', '100px');
       $('td:eq(3)', row).css('min-width', '100px');
       $('td:eq(8)', row).css('min-width', '100px');
@@ -49,7 +45,8 @@ $(document).ready(function () {
       }
     },{
       "targets": 0,
-      orderable: false,
+      'searchable': false,
+      'orderable': false,
       "render": function ( data, type, full, meta ) {
         return '<div class="custom-control custom-checkbox"><input type="checkbox" class="custom-control-input" id="checkbox'+data+'"><label class="custom-control-label" for="checkbox'+data+'" ></label></div>';
       }
@@ -109,7 +106,31 @@ $(document).ready(function () {
       $('#rowViewfullHeightModalRight').modal();
     }
   } );
+  // Checkbox / Select All link
+  $('div#dtBasicExample_wrapper div.row:nth-child(1) div.col-md-6').removeClass('col-md-6').addClass('col-md-4');
+  $('div#dtBasicExample_wrapper div.row:nth-child(1)').prepend('<div class="col-sm-12 col-md-4" style="padding-top:10px"><div id="linkContainer"><div><span id="sel_cnt">0 records selected</span></div><div><span id="sel_all">Select all records</span></div></div></div>');
+  $('span#sel_all').on('click', function(){
+    // Get all rows with search applied
+    var rows = table.rows({ 'search': 'applied' }).nodes();
+    $('span#sel_cnt').text(rows.length + ' records selected');
+    // Check/uncheck checkboxes for all rows in the table
+    $('input[type="checkbox"]', rows).prop('checked', true);
+    $('input#checkAll').prop('checked', true);
+  });
 
+  $('input#checkAll').on('change', function(){
+    var checked = $(this).prop('checked');
+    var visible_records = $('input[type=checkbox]');
+    if(checked){
+      $('span#sel_cnt').text(visible_records.length - 1 + ' records selected');
+    }
+    else{
+      $('span#sel_cnt').text('0 records selected');
+      var rows = table.rows().nodes();
+      $('input[type="checkbox"]', rows).prop('checked', false);
+    }
+    $('input[type=checkbox]').prop('checked', checked);
+  });
 
   function updateThumbnail(filename) {
     console.log(filename, 'from websocketserver');

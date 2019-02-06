@@ -45,3 +45,13 @@ table.table thead th{
 thead th div.md-form{
     margin-top: 0px;
 }
+div#linkContainer{
+    display: flex;
+}
+div#linkContainer div{
+    flex: auto;
+}
+span#sel_all{
+    text-decoration: underline;
+    cursor: pointer;
+} 
