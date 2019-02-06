@@ -27,11 +27,18 @@ const SheetSchema = new Schema({
     Facebook: String,
     Keyword: String,
     GoogleRank: String,
-    Query: String
+    Query: String,
+    SSCaptured: Boolean
 });
-
-SheetSchema.statics.saveGoogleRanking = function(id, GoogleRank){
-    return this.updateOne({_id: id}, { GoogleRank });
+SheetSchema.statics.getSSEmptySheet = function(){
+    return this.findOne({SSCaptured: false});
+}
+SheetSchema.statics.getUnRankedSheets = function(){
+    return this.find({GoogleRank: '0'});
+}
+SheetSchema.statics.updateData = function(_id, index, data){
+    const key = `${index}`;
+    return this.updateOne({ _id }, {$set: { [key]:data }});
 }
 SheetSchema.statics.getSheets = function(){
     return this.find();
@@ -40,7 +47,7 @@ SheetSchema.statics.removeAll = function(){
     return this.deleteMany();
 }
 SheetSchema.statics.saveSheet = function(Company, Address1, Address2, ZIPCode, City, Region, Country, Phone, Contact, Website, Responsive, Email, Facebook, Twitter, GooglePlus, Linkedin, Instagram, Youtube, Facebook, Keyword){
-    return this.create({ Company, Address1, Address2, ZIPCode, City, Region, Country, Phone, Contact, Website, Responsive, Email, Facebook, Twitter, GooglePlus, Linkedin, Instagram, Youtube, Facebook, Keyword, 'GoogleRank': 0, 'Query':'Plumbers Los Angeles'});
+    return this.create({ Company, Address1, Address2, ZIPCode, City, Region, Country, Phone, Contact, Website, Responsive, Email, Facebook, Twitter, GooglePlus, Linkedin, Instagram, Youtube, Facebook, Keyword, 'GoogleRank': '0', 'Query':'-', 'SSCaptured': false });
 }
 
 var Sheet =  mongoose.model('SheetSchema', SheetSchema);

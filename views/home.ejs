@@ -72,11 +72,7 @@
     <!--Main Navigation-->
   </header>
   <!-- /Start your project here-->
-  <div>
-    RSS: <div id='rss'></div><br>
-    Heap total: <div id='heapTotal'></div><br>
-    Heap used: <div id='heapUsed'></div><br>
-  </div>
+  
   <!-- SCRIPTS -->
   <!-- JQuery -->
   <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
@@ -90,19 +86,6 @@
   <!-- /Start your project here-->
   <script type="text/javascript" src="scripts/home.js"></script>
 
-  <script>
-    function updateStats(memuse) {
-      document.getElementById('rss').innerHTML = memuse.rss;
-      document.getElementById('heapTotal').innerHTML = memuse.heapTotal;
-      document.getElementById('heapUsed').innerHTML = memuse.heapUsed;
-    }
-    var host = window.document.location.host.replace(/:.*/, '');
-    console.log(window.document.location.host);
-    var ws = new WebSocket('wss://' + host + '/');
-    ws.onmessage = function (event) {
-      updateStats(JSON.parse(event.data));
-    };
-  </script>
 </body>
 
 </html>
