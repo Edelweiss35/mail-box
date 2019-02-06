@@ -26,7 +26,10 @@ $(document).ready(function () {
   // Init Datatable
   var table = $('#dtBasicExample').DataTable({
     "lengthMenu": [ 25, 50, 100 ],
-    select: true,
+    select: {
+      style:    'single',
+      selector: 'tr>td:nth-child(n+2)'
+    },
     'createdRow': function(row, data, dataIndex){
       $('td:eq(0)', row).css('min-width', '70px');
       $('td:eq(2)', row).css('min-width', '100px');
@@ -90,9 +93,10 @@ $(document).ready(function () {
 
   var selectedRowData = [];
   // Table cell click event
-  $('#dtBasicExample tbody').on( 'click', 'tr', function () {
-    if ( !$(this).hasClass('selected') ) {
-      selectedRowData = table.row( this ).data();
+  $('#dtBasicExample tbody').on( 'click', 'td:nth-child(n+2)', function () {
+    var parent = $(this).parent();
+    if ( !parent.hasClass('selected') ) {
+      selectedRowData = table.row( parent ).data();
 
       $('#info_company').html(selectedRowData[1]);
       $('#info_city').html(selectedRowData[2]);
