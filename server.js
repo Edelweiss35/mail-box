@@ -58,6 +58,10 @@ app.get('/table', function(req, res){
   res.render('table');
 });
 
+app.get('/mailbox', function(req, res){
+  res.render('mailbox');
+});
+
 var server = app.listen(port, async function(){
   console.log("Express server listening on port " + app.get('port'));
   createWebsocket(server);
