@@ -28,8 +28,13 @@ console.log('Connection established');
 mongoDB.connection();
 
 var exDomains = ['Yelp.com', 'Angieslist.com', 'Homeadvisor.com', 'Thumbtack.com'];
-
-app.post('/fileupload', async function (req, res, next) {
+app.post('/saveStatus', async function(req, res){
+  var params = req.body;
+  var idAry = params.idAry;
+  await Sheet.saveStatus(idAry);
+  res.end();
+});
+app.post('/fileupload', async function (req, res) {
   // drop db
   await Sheet.removeAll();
   // parse csv and store on db

@@ -28,8 +28,17 @@ const SheetSchema = new Schema({
     Keyword: String,
     GoogleRank: String,
     Query: String,
-    SSCaptured: Boolean
+    SSCaptured: Boolean,
+    Status: Boolean
 });
+SheetSchema.statics.saveStatus = async function( idAry){
+    await this.updateMany({'Status': true}, {$set: {'Status':false}});
+    for( var i in idAry ){
+        var _id = idAry[i];
+        await this.updateOne({_id}, {$set:{'Status': true}});
+    }
+    return;
+}
 SheetSchema.statics.getSSEmptySheet = function(){
     return this.findOne({SSCaptured: false});
 }
@@ -47,7 +56,7 @@ SheetSchema.statics.removeAll = function(){
     return this.deleteMany();
 }
 SheetSchema.statics.saveSheet = function(Company, Address1, Address2, ZIPCode, City, Region, Country, Phone, Contact, Website, Responsive, Email, Facebook, Twitter, GooglePlus, Linkedin, Instagram, Youtube, Facebook, Keyword){
-    return this.create({ Company, Address1, Address2, ZIPCode, City, Region, Country, Phone, Contact, Website, Responsive, Email, Facebook, Twitter, GooglePlus, Linkedin, Instagram, Youtube, Facebook, Keyword, 'GoogleRank': '0', 'Query':'-', 'SSCaptured': false });
+    return this.create({ Company, Address1, Address2, ZIPCode, City, Region, Country, Phone, Contact, Website, Responsive, Email, Facebook, Twitter, GooglePlus, Linkedin, Instagram, Youtube, Facebook, Keyword, 'GoogleRank': '0', 'Query':'-', 'SSCaptured': false, 'Status': false });
 }
 
 var Sheet =  mongoose.model('SheetSchema', SheetSchema);

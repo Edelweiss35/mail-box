@@ -48,7 +48,7 @@ $(document).ready(function () {
       'searchable': false,
       'orderable': false,
       "render": function ( data, type, full, meta ) {
-        return '<div class="custom-control custom-checkbox"><input type="checkbox" class="custom-control-input" id="checkbox'+data+'"><label class="custom-control-label" for="checkbox'+data+'" ></label></div>';
+        return '<div class="custom-control custom-checkbox"><input type="checkbox" class="custom-control-input" id="'+data+'"><label class="custom-control-label" for="'+data+'" ></label></div>';
       }
     } ]
   });
@@ -67,7 +67,7 @@ $(document).ready(function () {
         fileName = fileName.replace(/\//g, '>');
         var desktopFileName = fileName + '-desktop.jpg';
 
-        row.push(i);
+        row.push(ele._id);
         row.push(ele.Company);
         row.push(ele.City);
         row.push(ele.Region);
@@ -132,6 +132,24 @@ $(document).ready(function () {
     $('input[type=checkbox]').prop('checked', checked);
   });
 
+  // Save button
+  $('div#dtBasicExample_wrapper div.row:nth-child(3) div.col-sm-12').removeClass('col-md-5').removeClass('col-md-7').addClass('col-md-4');
+  $('div#dtBasicExample_wrapper div.row:nth-child(3)').prepend('<div class="col-sm-12 col-md-4 text-left"><button type="button" class="btn btn-primary" id="saveBtn">Save</button></div>');
+
+  $('button#saveBtn').on('click', function(){
+    var len = table.rows().count();
+    var idAry = [];
+    for( var i = 0; i < len; i++){
+      var row = table.rows(i).nodes();
+      var checked = $('input[type="checkbox"]', row).prop('checked');
+      if(checked){
+        var data = table.row(i).data();
+        var _id = data[0];
+        idAry.push(_id);
+      }
+    }
+    $.post('/saveStatus', {idAry}, function(){});
+  });
   function updateThumbnail(filename) {
     console.log(filename, 'from websocketserver');
     table.rows( function ( idx, data, node ) {
