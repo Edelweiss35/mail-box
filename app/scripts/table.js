@@ -97,15 +97,15 @@ $(document).ready(function () {
     if ( !$(this).hasClass('selected') ) {
       selectedRowData = table.row( this ).data();
 
-      $('#info_company').html(selectedRowData[0]);
-      $('#info_city').html(selectedRowData[1]);
-      $('#info_region').html(selectedRowData[2]);
-      $('#info_phone').html(selectedRowData[3]);
-      $('#info_contact').html(selectedRowData[4]);
-      $('#info_website').html(selectedRowData[5]);
-      $('#info_googlerank').html(selectedRowData[6]);
-      $('#info_query').html(selectedRowData[7]);
-      $('#info_email').html(selectedRowData[8]);
+      $('#info_company').html(selectedRowData[1]);
+      $('#info_city').html(selectedRowData[2]);
+      $('#info_region').html(selectedRowData[3]);
+      $('#info_phone').html(selectedRowData[4]);
+      $('#info_contact').html(selectedRowData[5]);
+      $('#info_website').html(selectedRowData[6]);
+      $('#info_googlerank').html(selectedRowData[7]);
+      $('#info_query').html(selectedRowData[8]);
+      $('#info_email').html(selectedRowData[9]);
       $('#rowViewfullHeightModalRight').modal();
     }
   } );
