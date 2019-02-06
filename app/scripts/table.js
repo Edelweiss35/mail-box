@@ -4,16 +4,18 @@ $(document).ready(function () {
   $('#spinner').removeClass('hide-opacity');
 
   // Setup - add a text input to each footer cell
-  $('#dtBasicExample tfoot th').each( function (i) {
+  $('#dtBasicExample tfoot tr th').each( function (i) {
     var title = $(this).text();
-    $(this).html( '<form class="form-inline md-form form-sm mt-0"><i class="fas fa-search" aria-hidden="true"></i><input id="col_'+i+'" class="search form-control form-control-sm ml-3 w-75" type="text" placeholder="'+title+'" aria-label="Search"></form>');
-  });
-
-  $(document).on('keyup change', "input.search",function () {
-    var query = $(this).val();
-    var col_index = $(this).attr('id').substring(4);
-    table.column(col_index).search(query).draw();
-  });
+    $(this).html( '<form class="form-inline md-form form-sm mt-0"><i class="fas fa-search" aria-hidden="true"></i><input class="form-control form-control-sm ml-3 w-75" type="text" placeholder="'+title+'" aria-label="Search"></form>');
+    $( 'input', this ).on( 'keyup change', function () {
+        if ( table.column(i).search() !== this.value ) {
+            table
+                .column(i)
+                .search( this.value )
+                .draw();
+        }
+    } );
+  } );
 
   // Init Datatable
   var table = $('#dtBasicExample').DataTable({
