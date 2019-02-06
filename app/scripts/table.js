@@ -75,11 +75,7 @@ $(document).ready(function () {
   var selectedRowData = [];
   // Table cell click event
   $('#dtBasicExample tbody').on( 'click', 'tr', function () {
-    if ( $(this).hasClass('selected') ) {
-      $("#viewBtn").attr("disabled",true);
-    }
-    else {
-      $("#viewBtn").attr("disabled",false);
+    if ( !$(this).hasClass('selected') ) {
       selectedRowData = table.row( this ).data();
 
       $('#info_company').html(selectedRowData[0]);
@@ -91,6 +87,7 @@ $(document).ready(function () {
       $('#info_googlerank').html(selectedRowData[6]);
       $('#info_query').html(selectedRowData[7]);
       $('#info_email').html(selectedRowData[8]);
+      $('#rowViewfullHeightModalRight').modal();
     }
   } );
 
