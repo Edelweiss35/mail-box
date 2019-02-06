@@ -55,13 +55,10 @@ app.get('/table', function(req, res){
   res.render('table');
 });
 
-<<<<<<< HEAD
 app.get('/mailbox', function(req, res){
   res.render('mailbox');
 });
-=======
 var ws = undefined;
->>>>>>> ebe6272ae0619448808d4a741d30229f50a9d27c
 
 var server = app.listen(port, async function(){
   console.log("Express server listening on port " + app.get('port'));
