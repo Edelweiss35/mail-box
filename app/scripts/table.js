@@ -4,37 +4,54 @@ $(document).ready(function () {
   $('#spinner').removeClass('hide-opacity');
 
   // Setup - add a text input to each footer cell
-  $('#dtBasicExample tfoot tr th').each( function (i) {
-    var title = $(this).text();
-    $(this).html( '<form class="form-inline md-form form-sm mt-0"><i class="fas fa-search" aria-hidden="true"></i><input class="form-control form-control-sm ml-3 w-75" type="text" placeholder="'+title+'" aria-label="Search"></form>');
+  $('#dtBasicExample thead tr:eq(0) th').each( function (i) {
+    
+    if(i == 0){
+      // check all
+      $(this).html('<div class="custom-control custom-checkbox"><input type="checkbox" class="custom-control-input" id="checkAll"><label class="custom-control-label" for="checkAll" ></label></div>');
+    }
+    else
+      $(this).html('<div class="input-group md-form form-sm form-1 pl-0"><div class="input-group-prepend"><span class="input-group-text white lighten-3" ><i class="fas fa-search text-purple" aria-hidden="true"></i></span></div><input class="form-control my-0 py-1" type="text" aria-label="Search"></div>');
+
     $( 'input', this ).on( 'keyup change', function () {
-        if ( table.column(i).search() !== this.value ) {
-            table
-                .column(i)
-                .search( this.value )
-                .draw();
-        }
-    } );
-  } );
+      if ( i > 0 && table.column(i).search() !== this.value ) {
+        table
+          .column(i)
+          .search( this.value )
+          .draw();
+      }
+    });
+  });
+
+  $('input#checkAll').on('change', function(){
+    var checked = $(this).prop('checked');
+    $('input[type=checkbox]').prop('checked', checked);
+  });
 
   // Init Datatable
   var table = $('#dtBasicExample').DataTable({
     "lengthMenu": [ 25, 50, 100 ],
     select: true,
+    'createdRow': function(row, data, dataIndex){
+      $('td:eq(2)', row).css('min-width', '100px');
+      $('td:eq(3)', row).css('min-width', '100px');
+      $('td:eq(8)', row).css('min-width', '100px');
+    },
     "columnDefs": [ {
-      "targets": 5,
+      "targets": 6,
       "render": function ( data, type, full, meta ) {
         return '<a target="_blank" rel="noopener noreferrer" href="'+data+'">'+data+'</a>';
       }
     },{
-      "targets": 9,
+      "targets": 10,
       "render": function ( data, type, full, meta ) {
         return '<a target="_blank" href="img/SS/'+data+'"><img src="img/SS/'+data+'" alt="'+data+'" style="width:150px"></a>';
       }
     },{
-      "targets": 10,
+      "targets": 0,
+      orderable: false,
       "render": function ( data, type, full, meta ) {
-        return '<div class="text-left"><div class="custom-control custom-radio"><input type="radio" class="custom-control-input" id="send'+data+'" name="group'+data+'"><label class="custom-control-label" for="send'+data+'" >Send</label></div><div class="custom-control custom-radio"><input type="radio" class="custom-control-input" id="ignore'+data+'" name="group'+data+'" checked><label class="custom-control-label" for="ignore'+data+'">Ignore</label></div></div>';
+        return '<div class="custom-control custom-checkbox"><input type="checkbox" class="custom-control-input" id="checkbox'+data+'"><label class="custom-control-label" for="checkbox'+data+'" ></label></div>';
       }
     } ]
   });
@@ -53,6 +70,7 @@ $(document).ready(function () {
         fileName = fileName.replace(/\//g, '>');
         var desktopFileName = fileName + '-desktop.jpg';
 
+        row.push(i);
         row.push(ele.Company);
         row.push(ele.City);
         row.push(ele.Region);
@@ -63,7 +81,6 @@ $(document).ready(function () {
         row.push(ele.Query);
         row.push(ele.Email);
         row.push(desktopFileName);
-        row.push(i);
         dataSet.push(row);
     }
     table.clear();
