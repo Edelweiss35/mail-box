@@ -4,12 +4,16 @@ $(document).ready(function () {
   $('#spinner').removeClass('hide-opacity');
 
   // Setup - add a text input to each footer cell
-  $('#dtBasicExample tfoot th').each( function () {
+  $('#dtBasicExample tfoot th').each( function (i) {
     var title = $(this).text();
-    // if( title != 'Thumbnail')
-    $(this).html( '<form class="form-inline md-form form-sm mt-0"><i class="fas fa-search" aria-hidden="true"></i><input class="form-control form-control-sm ml-3 w-75" type="text" placeholder="'+title+'" aria-label="Search"></form>');
-    
-  } );
+    $(this).html( '<form class="form-inline md-form form-sm mt-0"><i class="fas fa-search" aria-hidden="true"></i><input id="col_'+i+'" class="search form-control form-control-sm ml-3 w-75" type="text" placeholder="'+title+'" aria-label="Search"></form>');
+  });
+
+  $(document).on('keyup change', "input.search",function () {
+    var query = $(this).val();
+    var col_index = $(this).attr('id').substring(4);
+    table.column(col_index).search(query).draw();
+  });
 
   // Init Datatable
   var table = $('#dtBasicExample').DataTable({
@@ -25,21 +29,13 @@ $(document).ready(function () {
       "render": function ( data, type, full, meta ) {
         return '<a target="_blank" href="img/SS/'+data+'"><img src="img/SS/'+data+'" alt="'+data+'" style="width:150px"></a>';
       }
+    },{
+      "targets": 10,
+      "render": function ( data, type, full, meta ) {
+        return '<div class="text-left"><div class="custom-control custom-radio"><input type="radio" class="custom-control-input" id="send'+data+'" name="group'+data+'"><label class="custom-control-label" for="send'+data+'" >Send</label></div><div class="custom-control custom-radio"><input type="radio" class="custom-control-input" id="ignore'+data+'" name="group'+data+'" checked><label class="custom-control-label" for="ignore'+data+'">Ignore</label></div></div>';
+      }
     } ]
   });
-
-  // Apply the search
-  table.columns().every( function () {
-    var that = this;
-
-    $( 'input', this.footer() ).on( 'keyup change', function () {
-      if ( that.search() !== this.value ) {
-        that
-          .search( this.value )
-          .draw();
-      }
-    } );
-  } );
 
   $('.dataTables_length').addClass('bs-select');
 
@@ -65,6 +61,7 @@ $(document).ready(function () {
         row.push(ele.Query);
         row.push(ele.Email);
         row.push(desktopFileName);
+        row.push(i);
         dataSet.push(row);
     }
     table.clear();
