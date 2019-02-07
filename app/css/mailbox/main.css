@@ -427,3 +427,12 @@ button, input, optgroup, select, textarea {
 .fa-square-o:before {
     content: "\f096";
 }
+.mailbox-controls.text-center {
+    text-align: left!important;
+}
+.mt-3, .my-3 {
+    margin-top: 0rem!important;
+}
+.margin-bottom {
+    margin-bottom: 20px!important;
+}
