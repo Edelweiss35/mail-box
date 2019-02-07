@@ -63,6 +63,15 @@ app.get('/table', function(req, res){
 app.get('/mailbox', function(req, res){
   res.render('mailbox');
 });
+
+app.get('/compose', function(req, res){
+  res.render('compose');
+});
+
+app.get('/read-mail', function(req, res){
+  res.render('read-mail');
+});
+
 var ws = undefined;
 
 var server = app.listen(port, async function(){

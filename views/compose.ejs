@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Material Design Bootstrap</title>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
+  <!-- Bootstrap core CSS -->
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <!-- Material Design Bootstrap -->
+  <link href="css/mdb.min.css" rel="stylesheet">
+  <!-- MDBootstrap Datatables  -->
+  <link href="css/addons/datatables.min.css" rel="stylesheet">
+  <!-- DataTables Select CSS -->
+  <link href="css/addons/datatables-select.min.css" rel="stylesheet">
+
+  <!-- Your custom styles (optional) -->
+  <link href="css/table.css" rel="stylesheet">
+  <!-- Mailbox main CSS-->
+  <link href="css/mailbox/main.css" rel="stylesheet">
+
+</head>
+<body>
+  <header>
+    <!--Main Navigation-->
+    <nav class="navbar navbar-expand-lg navbar-dark blue">
+      <!-- <a class="navbar-brand" href="#"><strong>Navbar</strong></a> -->
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav m-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/table">Table</a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="/mailbox">Mailbox <span class="sr-only">(current)</span></a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <!--Main Navigation-->
+  
+  </header>
+  <main class="text-center my-3">
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+          <h1>
+            Mailbox
+            <small>13 new messages</small>
+          </h1>
+        </section>
+    
+        <!-- Main content -->
+        <section class="content">
+          <div class="row">
+            <div class="col-md-3">
+              <a href="/mailbox" class="btn btn-primary btn-block margin-bottom">Back to Inbox</a>
+    
+              <div class="box box-solid">
+                <div class="box-header with-border">
+                  <h3 class="box-title">Folders</h3>
+    
+                  <div class="box-tools">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="box-body no-padding">
+                  <ul class="nav nav-pills nav-stacked">
+                    <li><a href="/mailbox"><i class="fa fa-inbox"></i> Inbox
+                      <span class="label label-primary pull-right">12</span></a></li>
+                    <li><a href="#"><i class="fa fa-envelope-o"></i> Sent</a></li>
+                    <li><a href="#"><i class="fa fa-file-text-o"></i> Drafts</a></li>
+                    <li><a href="#"><i class="fa fa-filter"></i> Junk <span class="label label-warning pull-right">65</span></a>
+                    </li>
+                    <li><a href="#"><i class="fa fa-trash-o"></i> Trash</a></li>
+                  </ul>
+                </div>
+                <!-- /.box-body -->
+              </div>
+              <!-- /. box -->
+              <div class="box box-solid">
+                <div class="box-header with-border">
+                  <h3 class="box-title">Labels</h3>
+    
+                  <div class="box-tools">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                    </button>
+                  </div>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body no-padding">
+                  <ul class="nav nav-pills nav-stacked">
+                    <li><a href="#"><i class="fa fa-circle-o text-red"></i> Important</a></li>
+                    <li><a href="#"><i class="fa fa-circle-o text-yellow"></i> Promotions</a></li>
+                    <li><a href="#"><i class="fa fa-circle-o text-light-blue"></i> Social</a></li>
+                  </ul>
+                </div>
+                <!-- /.box-body -->
+              </div>
+              <!-- /.box -->
+            </div>
+            <!-- /.col -->
+            <div class="col-md-9">
+              <div class="box box-primary">
+                <div class="box-header with-border">
+                  <h3 class="box-title">Compose New Message</h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                  <div class="form-group">
+                    <input class="form-control" placeholder="To:">
+                  </div>
+                  <div class="form-group">
+                    <input class="form-control" placeholder="Subject:">
+                  </div>
+                  <div class="form-group">
+                        <textarea id="compose-textarea" class="form-control" style="height: 300px">
+                          <h1><u>Heading Of Message</u></h1>
+                          <h4>Subheading</h4>
+                          <p>But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain
+                            was born and I will give you a complete account of the system, and expound the actual teachings
+                            of the great explorer of the truth, the master-builder of human happiness. No one rejects,
+                            dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know
+                            how to pursue pleasure rationally encounter consequences that are extremely painful. Nor again
+                            is there anyone who loves or pursues or desires to obtain pain of itself, because it is pain,
+                            but because occasionally circumstances occur in which toil and pain can procure him some great
+                            pleasure. To take a trivial example, which of us ever undertakes laborious physical exercise,
+                            except to obtain some advantage from it? But who has any right to find fault with a man who
+                            chooses to enjoy a pleasure that has no annoying consequences, or one who avoids a pain that
+                            produces no resultant pleasure? On the other hand, we denounce with righteous indignation and
+                            dislike men who are so beguiled and demoralized by the charms of pleasure of the moment, so
+                            blinded by desire, that they cannot foresee</p>
+                          <ul>
+                            <li>List item one</li>
+                            <li>List item two</li>
+                            <li>List item three</li>
+                            <li>List item four</li>
+                          </ul>
+                          <p>Thank you,</p>
+                          <p>John Doe</p>
+                        </textarea>
+                  </div>
+                  <div class="form-group">
+                    <div class="btn btn-default btn-file">
+                      <i class="fa fa-paperclip"></i> Attachment
+                      <input type="file" name="attachment">
+                    </div>
+                    <p class="help-block">Max. 32MB</p>
+                  </div>
+                </div>
+                <!-- /.box-body -->
+                <div class="box-footer">
+                  <div class="pull-right">
+                    <button type="button" class="btn btn-default"><i class="fa fa-pencil"></i> Draft</button>
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-envelope-o"></i> Send</button>
+                  </div>
+                  <button type="reset" class="btn btn-default"><i class="fa fa-times"></i> Discard</button>
+                </div>
+                <!-- /.box-footer -->
+              </div>
+              <!-- /. box -->
+            </div>
+            <!-- /.col -->
+          </div>
+          <!-- /.row -->
+        </section>
+        <!-- /.content -->
+      </div>
+    <!-- /.content-wrapper -->
+  </main>
+  <!--Main Layout-->
+
+  <!-- SCRIPTS -->
+  <!-- JQuery -->
+  <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
+  <!-- Bootstrap tooltips -->
+  <script type="text/javascript" src="js/popper.min.js"></script>
+  <!-- Bootstrap core JavaScript -->
+  <script type="text/javascript" src="js/bootstrap.min.js"></script>
+  <!-- MDB core JavaScript -->
+  <script type="text/javascript" src="js/mdb.js"></script>
+  <!-- MDBootstrap Datatables  -->
+  <script type="text/javascript" src="js/addons/datatables.min.js"></script>
+  <!-- DataTables Select CSS -->
+  <script type="text/javascript" src="js/addons/datatables-select.min.js"></script>
+
+  <!-- /Start your project here-->
+  <script type="text/javascript" src="scripts/table.js"></script>
+</body>
+
+</html>
