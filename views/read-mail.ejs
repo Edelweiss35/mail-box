@@ -21,7 +21,8 @@
   <link href="css/table.css" rel="stylesheet">
   <!-- Mailbox main CSS-->
   <link href="css/mailbox/main.css" rel="stylesheet">
-
+  <!-- Mailbox panel CSS-->
+  <link href="css/mailbox/panel.css" rel="stylesheet">
 </head>
 <body>
   <header>
@@ -65,46 +66,53 @@
             <div class="col-md-3">
               <a href="/compose" class="btn btn-primary btn-block margin-bottom">Compose</a>
     
-              <div class="box box-solid">
-                <div class="box-header with-border">
-                  <h3 class="box-title">Folders</h3>
-    
-                  <div class="box-tools">
-                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                    </button>
-                  </div>
+              <div class="hpanel responsive-mg-b-30">
+                <div class="panel-body">
+                    <ul class="mailbox-list">
+                        <li>
+                            <a href="#">
+                                <span class="pull-right">12</span>
+                                <i class="fa fa-envelope"></i> Inbox
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-paper-plane"></i> Sent</a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-pencil"></i> Draft</a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-trash"></i> Trash</a>
+                        </li>
+                    </ul>
+                    <hr>
+                    <ul class="mailbox-list">
+                        <li>
+                            <a href="#"><i class="fa fa-plane text-danger"></i> Travel</a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-bar-chart text-warning"></i> Finance</a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-users text-info"></i> Social</a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-tag text-success"></i> Promos</a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-flag text-primary"></i> Updates</a>
+                        </li>
+                    </ul>
+                    <hr>
+                    <ul class="mailbox-list">
+                        <li>
+                            <a href="#"><i class="fa fa-gears"></i> Settings</a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-info-circle"></i> Support</a>
+                        </li>
+                    </ul>
                 </div>
-                <div class="box-body no-padding">
-                  <ul class="nav nav-pills nav-stacked">
-                    <li><a href="/mailbox"><i class="fa fa-inbox"></i> Inbox
-                      <span class="label label-primary pull-right">12</span></a></li>
-                    <li><a href="#"><i class="fa fa-envelope-o"></i> Sent</a></li>
-                    <li><a href="#"><i class="fa fa-file-text-o"></i> Drafts</a></li>
-                    <li><a href="#"><i class="fa fa-filter"></i> Junk <span class="label label-warning pull-right">65</span></a>
-                    </li>
-                    <li><a href="#"><i class="fa fa-trash-o"></i> Trash</a></li>
-                  </ul>
-                </div>
-                <!-- /.box-body -->
-              </div>
-              <!-- /. box -->
-              <div class="box box-solid">
-                <div class="box-header with-border">
-                  <h3 class="box-title">Labels</h3>
-    
-                  <div class="box-tools">
-                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                    </button>
-                  </div>
-                </div>
-                <div class="box-body no-padding">
-                  <ul class="nav nav-pills nav-stacked">
-                    <li><a href="#"><i class="fa fa-circle-o text-red"></i> Important</a></li>
-                    <li><a href="#"><i class="fa fa-circle-o text-yellow"></i> Promotions</a></li>
-                    <li><a href="#"><i class="fa fa-circle-o text-light-blue"></i> Social</a></li>
-                  </ul>
-                </div>
-                <!-- /.box-body -->
               </div>
               <!-- /.box -->
             </div>
